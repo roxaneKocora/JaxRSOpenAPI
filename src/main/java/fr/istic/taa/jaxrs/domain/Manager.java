@@ -18,7 +18,7 @@ public class Manager extends User implements Serializable {
 	
 	private String manager_agence;
 	@OneToMany(mappedBy = "manager", cascade = CascadeType.PERSIST)
-	@JsonManagedReference
+	//@JsonManagedReference
     private List<Event> events;
 
 

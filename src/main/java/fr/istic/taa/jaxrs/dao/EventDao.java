@@ -34,11 +34,5 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
                     .getResultList();
             
     }
-	
-//	findAll()
-//
-//	searchByCriteria(String keyword, Date date, String lieu) (pour la recherche).
-//
-//	updateValidation(Long id, boolean isValid).
 
 }

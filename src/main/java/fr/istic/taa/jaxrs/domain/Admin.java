@@ -20,7 +20,7 @@ public class Admin extends User implements Serializable  {
 	private NiveauAdmin admin_niveau;
 
 	@OneToMany(mappedBy = "admin", cascade = CascadeType.PERSIST)
-	@JsonManagedReference
+	//@JsonManagedReference
     private List<Event> events;
 
 

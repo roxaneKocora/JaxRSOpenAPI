@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Entity
 public class Client extends User implements Serializable{
 
-	private boolean client_newsletter = false;
+	private boolean client_newsletter;
 	
 	@OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
 	@JsonManagedReference

@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
+import fr.istic.taa.jaxrs.domain.enumeration.Role;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutConcert;
 import jakarta.persistence.*;
 
 @Entity
@@ -33,7 +35,9 @@ public class Event implements Serializable {
     private int dureeConcert;
     private String genreMusical;
     private int nb_place_disponible;
-    private boolean statut_concert = true;
+    
+    @Enumerated(EnumType.STRING)
+    private StatutConcert statut_concert;
 
     @Column(precision = 8, scale = 2)
     private BigDecimal prix_ticket;
@@ -45,17 +49,17 @@ public class Event implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "managerId", nullable = false)
-    @JsonBackReference
+    //@JsonBackReference
     private Manager manager;
 
     @ManyToOne
-    @JoinColumn(name = "adminId", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "adminId", nullable = true)
+    //@JsonBackReference
     private Admin admin;
 
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST)
-	@JsonManagedReference
+	//@JsonManagedReference
     private List<Ticket> tickets;
 
     
@@ -125,10 +129,10 @@ public class Event implements Serializable {
 	}
 
 
-	public boolean isStatut_concert() {
+	public StatutConcert getStatut_concert() {
 		return statut_concert;
 	}
-	public void setStatut_concert(boolean statut_concert) {
+	public void setStatut_concert(StatutConcert statut_concert) {
 		this.statut_concert = statut_concert;
 	}
 
