@@ -13,8 +13,10 @@ public class AchatTicketDto {
 	
     private Long clientId;
     private Long eventId;
-    private BigDecimal prix;
-    private String statut;
+
+	@JsonSerialize(using = LocalDateSerializer.class)
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateAchat;
     
 	public Long getClientId() {
@@ -30,25 +32,8 @@ public class AchatTicketDto {
 	public void setEventId(Long eventId) {
 		this.eventId = eventId;
 	}
-	
-	public BigDecimal getPrix() {
-		return prix;
-	}
-	public void setPrix(BigDecimal prix) {
-		this.prix = prix;
-	}
-	
-	public String getStatut() {
-		return statut;
-	}
-	public void setStatut(String statut) {
-		this.statut = statut;
-	}
 
 
-	@JsonSerialize(using = LocalDateSerializer.class)
-	@JsonDeserialize(using = LocalDateDeserializer.class)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public LocalDate getDateAchat() {
 		return dateAchat;
 	}

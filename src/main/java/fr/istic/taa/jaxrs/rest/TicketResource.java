@@ -6,13 +6,16 @@ import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.TicketDao;
 import fr.istic.taa.jaxrs.domain.Ticket;
 import fr.istic.taa.jaxrs.dto.AchatTicketDto;
+import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
@@ -31,6 +34,7 @@ public class TicketResource {
     }   
     
 
+    //Acheter un ticket
 	@POST
 	@Path("/acheter")
 	@Consumes("application/json")
@@ -46,11 +50,17 @@ public class TicketResource {
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "Erreur lors de l'achat (plus de places, client introuvable...)",
+                description = "Erreur lors de l'achat (Plus de places, Vous avez déjà un ticket pour cet event ou client introuvable...)",
                 content = @Content(schema = @Schema(implementation = String.class))
             )
         })
-	public Response acheterTicket(AchatTicketDto dto) {
+	public Response acheterTicket(
+		    @RequestBody(
+		            description = "Email et mot de passe de l'utilisateur",
+		            required = true,
+		            content = @Content(schema = @Schema(implementation = AchatTicketDto.class))
+		        )
+		    AchatTicketDto dto) {
 		  try {
 			  Ticket ticket = ticketService.acheterTicket(dto);
 			  return Response.status(Response.Status.CREATED).entity(ticket).build();
@@ -62,6 +72,8 @@ public class TicketResource {
 	}
     
 	
+
+    //liste des tickets par client
     @GET
     @Path("/all/{clientId}")
     @Operation(
@@ -79,8 +91,18 @@ public class TicketResource {
                 description = "Client introuvable"
             )
         })
-    public Response findEventsByManagerId(@PathParam("clientId") Long clientId) {
-        return Response.ok(ticketService.findTicketsByClientId(clientId)).build();
+    public Response findEventsByManagerId(
+            @Parameter(description = "ID du manager", required = true)
+            @PathParam("clientId") Long clientId) {
+
+        try {
+        	return Response.ok(ticketService.findTicketsByClientId(clientId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
     }
     	
 
