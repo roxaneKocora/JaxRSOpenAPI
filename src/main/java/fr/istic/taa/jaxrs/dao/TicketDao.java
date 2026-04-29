@@ -29,20 +29,5 @@ public class TicketDao extends AbstractJpaDao<TicketId, Ticket> {
                     .setParameter("event_id", eid)
                     .getResultList();  
     }
-	
-//	save(Ticket t)
-//
-//	delete(Long id)
-//
-//	findByUserId(Long userId)
-//
-//	findById(Long id).
-
-
-    //Exemple d'utilisation cle composite
-   // TicketDao ticketDao = new TicketDao();
-   // // K est un TicketId
-   // TicketId id = new TicketId(userId, concertId); 
-   // Ticket t = ticketDao.findOne(id);
     
 }
