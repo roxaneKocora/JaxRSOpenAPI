@@ -32,7 +32,7 @@ public class ManagerResource {
 
 	
 	@POST
-	@Path("/ajouter")
+	@Path("/inscription")
 	@Consumes("application/json")
 	@Operation(summary = "Ajouter Manager", description = "Enregistrer un Manager")
 	@ApiResponses({

@@ -52,6 +52,7 @@ public class TestApplication extends Application {
         clazzes.add(EventResource.class);
         clazzes.add(TicketResource.class);
         clazzes.add(SwaggerResource.class);
+        clazzes.add(CorsFilter.class);
          
         return clazzes;
     }

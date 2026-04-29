@@ -33,9 +33,9 @@ public class ManagerService {
 	    manager.setDate_naissance(dto.getDate_naissance());
 	    manager.setRole(Role.MANAGER);
 	    manager.setManager_agence(dto.getManager_agence());
-	    
-	    String tempPassword = manager.getNom()+("123"); // ex: "Kouassi123"
-	    manager.setPassword(BCrypt.hashpw(tempPassword, BCrypt.gensalt())); 
+
+		//Utilise le password envoyé par le formulaire
+		manager.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()));
 	    
 	    this.managerDao.save(manager); 
 	    
