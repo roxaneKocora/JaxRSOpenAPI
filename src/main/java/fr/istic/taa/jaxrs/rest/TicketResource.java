@@ -71,11 +71,46 @@ public class TicketResource {
 		}
 	}
     
-	
+	@GET
+	@Path("/{clientId}/{eventId}")
+    @Operation(
+            summary = "Récupérer un ticket",
+            description = "Retourne les infos sur un ticket"
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "Ticket trouve avec succes",
+                content = @Content(schema = @Schema(implementation = Ticket.class))
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "Ticket introuvable "
+            )
+        })
+	public Response findTicketById(
+            @Parameter(description = "ID du client", required = true)
+	        @PathParam("clientId") Long clientId,
+	        
+            @Parameter(description = "ID de l'event", required = true)
+	        @PathParam("eventId") Long eventId) {
 
+
+        try {
+    	    return Response.ok(ticketService.findTicketById(clientId, eventId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+	}
+	
+	
+	
     //liste des tickets par client
     @GET
-    @Path("/all/{clientId}")
+    @Path("/all/client/{clientId}")
     @Operation(
             summary = "Récupérer les tickets d'un client",
             description = "Retourne la liste de tous les tickets achetés par un client"
@@ -91,8 +126,8 @@ public class TicketResource {
                 description = "Client introuvable"
             )
         })
-    public Response findEventsByManagerId(
-            @Parameter(description = "ID du manager", required = true)
+    public Response findTicketsByClientId(
+            @Parameter(description = "ID du client", required = true)
             @PathParam("clientId") Long clientId) {
 
         try {
@@ -100,6 +135,74 @@ public class TicketResource {
             
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+    
+
+
+    //liste des tickets par event
+    @GET
+    @Path("/all/event/{eventId}")
+    @Operation(
+            summary = "Récupérer les tickets d'un evenement",
+            description = "Retourne la liste de tous les tickets achetés pour un evenement"
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "Liste des tickets du client",
+                content = @Content(schema = @Schema(implementation = Ticket.class))
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "Evenement introuvable"
+            )
+        })
+    public Response findTicketsByEventId (
+            @Parameter(description = "ID de l'event", required = true)
+            @PathParam("eventId") Long eventId) {
+
+        try {
+        	return Response.ok(ticketService.findTicketsByClientId(eventId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+    
+    
+    ///////
+    @GET
+    @Path("/total/event/{eventId}")
+    @Operation(
+            summary = "Récupérer le total des tickets d'un evenement",
+            description = "Retourne le nombre total de tickets donc de places vendues pour un evenement"
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "le nombre total de tickets",
+                content = @Content(schema = @Schema(implementation = Ticket.class))
+            ),
+            @ApiResponse(
+                responseCode = "400",
+                description = "Evenement introuvable ou Accès refusé au manager"
+            )
+        })
+    public Response getTicketsSold(
+    		@Parameter(description = "ID de l'event", required = true) @PathParam("eventId") Long eventId,
+
+            @Parameter(description = "ID du manager", required = true) @QueryParam("managerId") Long managerId) {
+
+        try {
+        	return Response.ok(ticketService.findTicketSoldByEvent(eventId, managerId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
                            .entity(e.getMessage())
                            .build();
         }

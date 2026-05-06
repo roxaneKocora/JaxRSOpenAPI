@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
+import fr.istic.taa.jaxrs.domain.Admin;
 import fr.istic.taa.jaxrs.domain.Event;
 import fr.istic.taa.jaxrs.domain.Manager;
 import fr.istic.taa.jaxrs.domain.User;
-import fr.istic.taa.jaxrs.domain.enumeration.StatutConcert;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.dto.EventReponseDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
@@ -19,10 +21,12 @@ public class EventService {
 	
     private EventDao eventDao;
 	private ManagerDao managerDao;
+	private AdminDao adminDao;
 
     // Injection par constructeur
-    public EventService(ManagerDao managerDao, EventDao eventDao) {
+    public EventService(ManagerDao managerDao, AdminDao adminDao, EventDao eventDao) {
         this.managerDao = managerDao;
+        this.adminDao = adminDao;
         this.eventDao = eventDao;
     }
     
@@ -43,7 +47,7 @@ public class EventService {
         event.setNb_place_disponible(dto.getNbPlaceDispo());
         event.setDureeConcert(dto.getDureeConcert());
         event.setPrix_ticket(dto.getPrix_ticket());
-        event.setStatut_concert(StatutConcert.ATTENTE_VALIDATION);
+        event.setStatut_concert(StatutEvent.ATTENTE_VALIDATION);
         event.setManager(manager);
 
         eventDao.save(event);
@@ -106,7 +110,7 @@ public class EventService {
     }
 
     
-  //liste des evenements pour un manager
+    //liste des evenements pour un manager
     public List<EventReponseDto> findEventsByManagerId(Long managerId) {
     	
         if (this.managerDao.findOne(managerId) == null) {
@@ -139,6 +143,110 @@ public class EventService {
     	        dtos.add(dto);
     	    }
     	    return dtos;
+    }
+    
+
+    //afficher un Event
+    public EventReponseDto findEventById(Long eventId) {
+
+	    Event event = eventDao.findOne(eventId);
+        
+        if (event == null) {
+            throw new EntityNotFoundException("Event introuvable");
+        }
+
+        EventReponseDto response = new EventReponseDto();
+        response.setEventId(event.getEventId());
+        response.setNom(event.getNom());
+        response.setArtiste(event.getArtiste());
+        response.setDescription(event.getDescription());
+        response.setDateConcert(event.getDate_concert());
+        response.setDureeConcert(event.getDureeConcert());
+        response.setGenreMusical(event.getGenreMusical());
+        response.setLieu(event.getLieu());
+        response.setNbPlaceDispo(event.getNb_place_disponible());
+        response.setStatut_concert(event.getStatut_concert());
+        response.setPrix_ticket(event.getPrix_ticket());
+        response.setManagerId(event.getManager().getUserId());
+        
+        if (event.getAdmin() != null) {
+            response.setAdminId(event.getAdmin().getUserId());
+        } else {
+            response.setAdminId(null);
+        }
+        
+        return response;
+    }
+    
+    //valider ou annuler concert
+    public EventReponseDto updateStatut(Long eventId, Long adminId, StatutEvent nouveauStatut) {
+    	
+        Event event = eventDao.findOne(eventId);
+        Admin admin = adminDao.findOne(adminId);
+
+        if (event == null) {
+            throw new EntityNotFoundException("Événement introuvable.");
+        }
+        
+        if (admin == null) {
+            throw new EntityNotFoundException("Admin introuvable.");
+        }
+
+        if (!event.getStatut_concert().equals(StatutEvent.ATTENTE_VALIDATION)) {
+            throw new IllegalStateException("Cet événement a déjà été traité.");
+        }
+
+        event.setStatut_concert(nouveauStatut);
+        event.setAdmin(admin);
+        eventDao.update(event);
+        
+        
+        // Mapper vers DTO de réponse
+        EventReponseDto response = new EventReponseDto();
+        response.setEventId(event.getEventId());
+        response.setNom(event.getNom());
+        response.setArtiste(event.getArtiste());
+        response.setDescription(event.getDescription());
+        response.setDateConcert(event.getDate_concert());
+        response.setDureeConcert(event.getDureeConcert());
+        response.setGenreMusical(event.getGenreMusical());
+        response.setLieu(event.getLieu());
+        response.setNbPlaceDispo(event.getNb_place_disponible());
+        response.setStatut_concert(event.getStatut_concert());
+        response.setPrix_ticket(event.getPrix_ticket());
+        response.setManagerId(event.getManager().getUserId());
+        
+        if (event.getAdmin() != null) {
+            response.setAdminId(event.getAdmin().getUserId());
+        } else {
+            response.setAdminId(null);
+        }
+        
+        return response;
+    }
+    
+    //supprimer un evenement soft delete
+    public void deleteEvent(Long eventId, Long managerId) {
+        Event event = eventDao.findOne(eventId);
+
+        if (event == null) {
+            throw new RuntimeException("Événement introuvable.");
+        }
+
+        if (!event.getManager().getUserId().equals(managerId)) {
+            throw new RuntimeException("Accès refusé.");
+        }
+
+        if (event.isDeleted()) {
+            throw new RuntimeException("Événement déjà supprimé.");
+        }
+
+        if (event.getStatut_concert() == StatutEvent.VALIDE || event.getStatut_concert() == StatutEvent.ANNULE) {
+            throw new RuntimeException("Impossible de supprimer cet événement.");
+        }
+        
+        event.setDeleted(true);
+        eventDao.update(event);
     }
 
 }

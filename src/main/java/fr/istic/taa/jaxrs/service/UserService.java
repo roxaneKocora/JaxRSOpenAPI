@@ -6,10 +6,11 @@ import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 import fr.istic.taa.jaxrs.dao.UserDao;
 import fr.istic.taa.jaxrs.domain.*;
-import fr.istic.taa.jaxrs.domain.User;
 import fr.istic.taa.jaxrs.dto.ConnexionDto;
 import fr.istic.taa.jaxrs.dto.PasswordDto;
+import fr.istic.taa.jaxrs.dto.StatutUserDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
+import jakarta.persistence.EntityNotFoundException;
 
 public class UserService {
     
@@ -76,7 +77,38 @@ public class UserService {
 	}
 	
 
-	//3- Liste des utilisateurs
+	//3- Suspendre Utilisateur
+    public UserResponseDto suspendreUtilisateur(Long userId, StatutUserDto dto) {
+        User user = userDao.findOne(userId);
+
+        if (user == null) {
+            throw new EntityNotFoundException("Utilisateur introuvable.");
+        }
+
+        if (user.isStatut_user()) {
+        	
+            user.setStatut_user(false);       	
+        }else {
+            user.setStatut_user(true);
+        }
+        
+        userDao.update(user);
+        // Mapper vers UserResponseDTO 
+	    UserResponseDto response = new UserResponseDto();
+        response.setId(user.getUserId());
+        response.setNom(user.getNom());
+        response.setPrenom(user.getPrenom());
+        response.setEmail(user.getEmail());
+        response.setTelephone(user.getTelephone());
+        response.setStatut_user(user.isStatut_user());
+        response.setDate_naissance(user.getDate_naissance());
+        response.setRole(user.getRole()); 
+        
+        return response;
+    }
+    
+    
+	//4- Liste des utilisateurs
 	public List<UserResponseDto> listeUtilisateurs() {
 	    List<User> users = userDao.findAllUser();
 	    List<UserResponseDto> dtos = new ArrayList<>();
@@ -94,4 +126,26 @@ public class UserService {
 	    }
 	    return dtos;
 	}
+	
+
+    //5- afficher un User
+    public UserResponseDto findUserById(Long userId) {
+
+	    User user = userDao.findOne(userId);
+        
+        if (user == null) {
+            throw new EntityNotFoundException("User introuvable");
+        }
+
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getUserId());
+        dto.setNom(user.getNom());
+        dto.setPrenom(user.getNom());
+        dto.setEmail(user.getEmail());
+        dto.setTelephone(user.getTelephone());
+        dto.setRole(user.getRole());
+        dto.setStatut_user(user.isStatut_user());
+
+        return dto;
+    }
 }

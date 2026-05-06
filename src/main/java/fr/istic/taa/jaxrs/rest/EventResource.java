@@ -2,12 +2,15 @@ package fr.istic.taa.jaxrs.rest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
 import fr.istic.taa.jaxrs.domain.Event;
 import fr.istic.taa.jaxrs.dto.ConnexionDto;
 import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.dto.EventReponseDto;
+import fr.istic.taa.jaxrs.dto.StatutDTO;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import fr.istic.taa.jaxrs.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +34,9 @@ public class EventResource {
 
     public EventResource() {
     	EventDao eventDao = new EventDao();
+    	AdminDao adminDao = new AdminDao();
     	ManagerDao managerDao = new ManagerDao();
-        this.eventService = new EventService(managerDao, eventDao);
+        this.eventService = new EventService(managerDao, adminDao, eventDao);
     } 
     
     //Créer un événement
@@ -65,7 +69,41 @@ public class EventResource {
 	        }
     }
     
-    
+
+    //aficher un event
+	@GET
+	@Path("/{eventId}")
+    @Operation(
+            summary = "Récupérer un evenement",
+            description = "Retourne les infos sur un evenement"
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "evenement trouve avec succes",
+                content = @Content(schema = @Schema(implementation = EventReponseDto.class))
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "evenement introuvable "
+            )
+        })
+	public Response findUserById(
+            @Parameter(description = "ID de l'evenement", required = true)
+	        @PathParam("eventId") Long eventId) {
+
+
+        try {
+    	    return Response.ok(eventService.findEventById(eventId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+	}
+	
+	
     //Événements par manager
     @GET
     @Path("/all/{managerId}")
@@ -116,6 +154,66 @@ public class EventResource {
         } catch (DateTimeParseException e) {
             return Response.status(Response.Status.NOT_FOUND)
                            .entity("Format de date invalide, utilisez YYYY-MM-DD")
+                           .build();
+        }
+    }
+    
+    //valider ou non un evenement
+    @PATCH
+	@Consumes("application/json")
+    @Path("/{eventId}/statut")
+    @Operation(summary = "modifier statut de l'event")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "Statut bien modifié",
+		        content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+    	@ApiResponse(responseCode = "400", description = "Événement introuvable ou déjà été traité")
+    })
+    public Response updateStatut(
+		@Parameter(description = "ID de l'event", required = true)
+        @PathParam("eventId") Long eventId, 
+		@Parameter(description = "ID de l'admin", required = true)
+        @QueryParam("adminId") Long adminId, 
+	    @RequestBody(
+	            description = "Example valeurs du champ : ANNULE, VALIDE",
+	            required = true,
+	            content = @Content(schema = @Schema(implementation = StatutDTO.class))
+	        )StatutDTO statutDTO) {        
+
+        try {
+            return Response.ok(eventService.updateStatut(eventId, adminId, statutDTO.getStatut_concert())).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+    
+    //supprimer un evenement
+    @DELETE
+    @Path("/delete/{eventId}")
+	@Consumes("application/json")
+    @Operation(summary = "supprimer un event")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "evenement bien supprimé"),
+    	@ApiResponse(responseCode = "400", description = "Événement introuvable ou déjà été supprimé")
+    })
+    public Response deleteEvent(
+
+    	@Parameter(description = "ID de l'event", required = true)
+        @PathParam("eventId") Long eventId,
+
+		@Parameter(description = "ID du manager", required = true)
+        @QueryParam("managerId") Long managerId) {
+
+        try {
+        	
+            eventService.deleteEvent(eventId, managerId);
+	        return Response.ok("evenement bien supprimé").build();   
+	        
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity(e.getMessage())
                            .build();
         }
     }

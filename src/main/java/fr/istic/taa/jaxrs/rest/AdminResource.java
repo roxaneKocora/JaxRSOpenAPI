@@ -1,12 +1,13 @@
 package fr.istic.taa.jaxrs.rest;
 
 import fr.istic.taa.jaxrs.dao.AdminDao;
-import fr.istic.taa.jaxrs.dao.ClientDao;
+import fr.istic.taa.jaxrs.dao.ManagerDao;
 import fr.istic.taa.jaxrs.dao.UserDao;
-import fr.istic.taa.jaxrs.dto.InscriptionClientDto;
+import fr.istic.taa.jaxrs.domain.User;
+import fr.istic.taa.jaxrs.dto.EnregistrerAdminDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import fr.istic.taa.jaxrs.service.AdminService;
-import fr.istic.taa.jaxrs.service.ClientService;
+import fr.istic.taa.jaxrs.service.ManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,9 +32,36 @@ public class AdminResource {
 
     public AdminResource() {
         AdminDao adminDao = new AdminDao();
-        this.adminService = new AdminService(adminDao);
+        UserDao userDao = new UserDao();
+        this.adminService = new AdminService(adminDao, userDao);
     }
     
+    @POST
+	@Path("/ajouter")
+	@Consumes("application/json")
+	@Operation(summary = "Ajouter Admin", description = "Enregistrer un Admin")
+	@ApiResponses({
+	    @ApiResponse(responseCode = "201", description = "Ajout réussie",
+	        content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+	    @ApiResponse(responseCode = "400", description = "Email déjà utilisé")
+	})
+	public Response ajouterManager(
+		    @RequestBody(
+		            description = "body de l'api",
+		            required = true,
+		            content = @Content(schema = @Schema(implementation = EnregistrerAdminDto.class))
+		        )
+		    EnregistrerAdminDto dto) {
+		  try {
+			  UserResponseDto response = adminService.ajouterAdmin(dto);
+			  return Response.status(Response.Status.CREATED).entity(response).build();
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
 
 	  //liste des utilisateurs
 	    @GET

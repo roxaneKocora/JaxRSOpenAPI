@@ -7,8 +7,8 @@ import java.util.Objects;
 
 @Embeddable
 public class TicketId implements Serializable {
-    private long userId;
-    private long eventId;
+    private Long userId;
+    private Long eventId;
     
 
 	//CONSTRUCTEURS
@@ -22,11 +22,11 @@ public class TicketId implements Serializable {
     
 
     //GETTERS - SETTERS
-    public long getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
     
-    public long getEventId() { return eventId; }
-    public void setEventId(int eventId) { this.eventId = eventId; }
+    public Long getEventId() { return eventId; }
+    public void setEventId(Long eventId) { this.eventId = eventId; }
     
     @Override
     public boolean equals(Object o) {

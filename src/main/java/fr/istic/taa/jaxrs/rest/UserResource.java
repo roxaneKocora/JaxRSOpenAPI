@@ -1,8 +1,12 @@
 package fr.istic.taa.jaxrs.rest;
 
 import fr.istic.taa.jaxrs.dao.UserDao;
+import fr.istic.taa.jaxrs.domain.Ticket;
 import fr.istic.taa.jaxrs.dto.ConnexionDto;
+import fr.istic.taa.jaxrs.dto.EventReponseDto;
 import fr.istic.taa.jaxrs.dto.PasswordDto;
+import fr.istic.taa.jaxrs.dto.StatutDTO;
+import fr.istic.taa.jaxrs.dto.StatutUserDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import fr.istic.taa.jaxrs.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -86,7 +90,7 @@ public class UserResource {
 	  }
 	  
 	  
-	  //liste des utilisateurs
+	    //liste des utilisateurs
 	    @GET
 	    @Path("/all")
 	    @Operation(summary = "Lister tous les utilisateurs", description = "Retourne la liste de tous les utilisateurs")
@@ -97,4 +101,71 @@ public class UserResource {
 	    public Response listeUtilisateurs() {
 	        return Response.ok(userService.listeUtilisateurs()).build();
 	    }
+	    
+	    //aficher un user
+		@GET
+		@Path("/{userId}")
+	    @Operation(
+	            summary = "Récupérer un user",
+	            description = "Retourne les infos sur un user"
+	        )
+	        @ApiResponses({
+	            @ApiResponse(
+	                responseCode = "200",
+	                description = "User trouve avec succes",
+	                content = @Content(schema = @Schema(implementation = UserResponseDto.class))
+	            ),
+	            @ApiResponse(
+	                responseCode = "404",
+	                description = "User introuvable "
+	            )
+	        })
+		public Response findUserById(
+	            @Parameter(description = "ID du client", required = true)
+		        @PathParam("userId") Long userId) {
+
+
+	        try {
+	    	    return Response.ok(userService.findUserById(userId)).build();
+	            
+	        } catch (Exception e) {
+	            return Response.status(Response.Status.NOT_FOUND)
+	                           .entity(e.getMessage())
+	                           .build();
+	        }
+		}
+		
+		
+		//suspendre utilisateur
+	    @PATCH
+	    @Path("/{userId}/statut")
+		@Consumes("application/json")
+	    @Operation(summary = "suspendre ou reactiver un utilisateur")
+	    @ApiResponses({
+	    	@ApiResponse(responseCode = "200", description = "Statut bien modifié",
+			        content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+	    	@ApiResponse(responseCode = "400", description = "User introuvable ou  Déjà bloqué")
+	    })
+	    public Response suspendreUtilisateur(
+	    	@Parameter(description = "ID de l'utilisateur", required = true)
+	        @PathParam("userId") Long userId,
+	        @RequestBody(
+		            description = "Example valeurs du champ : false pour reactiver - truee pour suspendre",
+		            required = true,
+		            content = @Content(schema = @Schema(implementation = StatutUserDto.class))
+		        )StatutUserDto dto) {  
+
+		      try {
+		    	  
+		    	  return Response.ok(userService.suspendreUtilisateur(userId, dto)).build();
+		    	  
+		      } catch (Exception e) {
+
+		          return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+		      }
+	    }
+	    
+	    
+	    
+	    
 }

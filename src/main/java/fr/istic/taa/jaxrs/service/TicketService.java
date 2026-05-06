@@ -70,16 +70,55 @@ public class TicketService {
         return ticket;
     }
     
-    
+
+    // afficher un Ticket
+    public Ticket findTicketById(Long userId, Long eventId) {
+
+        TicketId ticket_id = new TicketId(userId, eventId); 
+        Ticket ticket = ticketDao.findOne(ticket_id);
+        
+        if (ticket == null) {
+            throw new EntityNotFoundException("Ticket introuvable");
+        }
+
+        return ticket;
+    }
     
 
-    // Liste des Tickets par client
+    // Liste des Tickets par event
     public List<Ticket> findTicketsByClientId(Long clientId) {
     	
-        if (this.clientDao.findOne(clientId) == null) {
+        if (this.eventDao.findOne(clientId) == null) {
             throw new EntityNotFoundException("Client Introuvable");
         }
-        return ticketDao.findByClientIdNamedQuery(clientId);
+        return ticketDao.findByEventId(clientId);
+    }
+    
+    
+    // Liste des Tickets par event
+    public List<Ticket> findTicketsByEventId(Long eventId) {
+    	
+        if (this.eventDao.findOne(eventId) == null) {
+            throw new EntityNotFoundException("Event Introuvable");
+        }
+        return ticketDao.findByEventId(eventId);
+    }
+    
+    
+    // nombre de tickets pour un événement 
+    public long findTicketSoldByEvent(Long eventId, Long managerId) {
+    	
+        Event event = eventDao.findOne(eventId);
+
+        if (event == null) {
+            throw new EntityNotFoundException("Événement introuvable.");
+        }
+
+        if (!event.getManager().getUserId().equals(managerId)) {
+            throw new IllegalStateException("Accès refusé : cet événement ne vous appartient pas.");
+        }
+
+        return ticketDao.countTicketsByEvent(eventId);
     }
     
 	

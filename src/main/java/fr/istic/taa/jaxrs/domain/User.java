@@ -23,7 +23,7 @@ public class User implements Serializable {
 
 	@Id
 	@GeneratedValue
-	protected long userId;
+	protected Long userId;
 
 	@Enumerated(EnumType.STRING)
     protected Role role;
@@ -33,7 +33,7 @@ public class User implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     protected LocalDate date_naissance;
 	
-	protected boolean statut_user = true;
+	protected boolean statut_user = false;
     protected String nom;
     protected String prenom;
     protected String email;
@@ -43,10 +43,10 @@ public class User implements Serializable {
     
     //Getters and Setters
     
-	public long getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
-	public void setUserId(long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

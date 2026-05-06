@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
-import fr.istic.taa.jaxrs.domain.enumeration.StatutConcert;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 
 public class EventReponseDto {
 
@@ -24,7 +24,7 @@ public class EventReponseDto {
     private Long managerId;
     private Long adminId;
     private BigDecimal prix_ticket;
-    private StatutConcert statut_concert;
+    private StatutEvent statut_concert;
 
 	@JsonSerialize(using = LocalDateSerializer.class)
 	@JsonDeserialize(using = LocalDateDeserializer.class)
@@ -101,10 +101,10 @@ public class EventReponseDto {
 	}
 	
 
-	public StatutConcert getStatut_concert() {
+	public StatutEvent getStatut_concert() {
 		return statut_concert;
 	}
-	public void setStatut_concert(StatutConcert statut_concert) {
+	public void setStatut_concert(StatutEvent statut_concert) {
 		this.statut_concert = statut_concert;
 	}
 	

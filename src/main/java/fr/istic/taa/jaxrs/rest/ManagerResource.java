@@ -32,7 +32,7 @@ public class ManagerResource {
 
 	
 	@POST
-	@Path("/inscription")
+	@Path("/ajouter")
 	@Consumes("application/json")
 	@Operation(summary = "Ajouter Manager", description = "Enregistrer un Manager")
 	@ApiResponses({
@@ -41,11 +41,11 @@ public class ManagerResource {
 	    @ApiResponse(responseCode = "400", description = "Email déjà utilisé")
 	})
 	public Response ajouterManager(
-//		    @RequestBody(
-//		            description = "body de l'api",
-//		            required = true,
-//		            content = @Content(schema = @Schema(implementation = InscriptionDto.class))
-//		        )
+		    @RequestBody(
+		            description = "body de l'api",
+		            required = true,
+		            content = @Content(schema = @Schema(implementation = EnregistrerManagerDto.class))
+		        )
 			EnregistrerManagerDto dto) {
 		  try {
 			  UserResponseDto response = managerService.ajouterManager(dto);

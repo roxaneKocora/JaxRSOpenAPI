@@ -24,9 +24,9 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
     }
 	
 
-    // Requête JPQL
+    //Requête JPQL
     public List<Event> findByManagerId(Long managerId) {
-	    String query_jpql = "SELECT e FROM Event e WHERE e.manager.userId = :manager_id";
+	    String query_jpql = "SELECT e FROM Event e WHERE e.manager.userId = :manager_id AND e.is_deleted = false";
     	
             return entityManager
             		.createQuery(query_jpql, Event.class)

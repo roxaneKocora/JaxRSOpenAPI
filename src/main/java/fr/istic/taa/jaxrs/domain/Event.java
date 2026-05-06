@@ -14,30 +14,32 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import fr.istic.taa.jaxrs.domain.enumeration.Role;
-import fr.istic.taa.jaxrs.domain.enumeration.StatutConcert;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 import jakarta.persistence.*;
 
 @Entity
 //Requete NamedQuery
 @NamedQuery(
 	    name = "Event.findByDateEvent",
-	    query = "SELECT e FROM Event e WHERE e.date_concert = :dateConcert"
+	    query = "SELECT e FROM Event e WHERE e.date_concert = :dateConcert AND e.is_deleted = false "
+	    		+ "AND e.statut_event != ANNULE"
 	)
 public class Event implements Serializable {
 
 	@Id
     @GeneratedValue
-    private long eventId;
+    private Long eventId;
 	private String nom;
     private String description;
     private String artiste;
     private String lieu;
-    private int dureeConcert;
+    private int duree_event;
     private String genreMusical;
     private int nb_place_disponible;
+    private boolean is_deleted;
     
     @Enumerated(EnumType.STRING)
-    private StatutConcert statut_concert;
+    private StatutEvent statut_event;
 
     @Column(precision = 8, scale = 2)
     private BigDecimal prix_ticket;
@@ -65,10 +67,10 @@ public class Event implements Serializable {
     
     //GETTERS - SETTERS
 
-	public long getEventId() {
+	public Long getEventId() {
 		return eventId;
 	}
-	public void setEventId(long eventId) {
+	public void setEventId(Long eventId) {
 		this.eventId = eventId;
 	}
 
@@ -106,10 +108,10 @@ public class Event implements Serializable {
 
 
 	public int getDureeConcert() {
-		return dureeConcert;
+		return duree_event;
 	}
-	public void setDureeConcert(int dureeConcert) {
-		this.dureeConcert = dureeConcert;
+	public void setDureeConcert(int duree_event) {
+		this.duree_event = duree_event;
 	}
 
 
@@ -129,11 +131,11 @@ public class Event implements Serializable {
 	}
 
 
-	public StatutConcert getStatut_concert() {
-		return statut_concert;
+	public StatutEvent getStatut_concert() {
+		return statut_event;
 	}
-	public void setStatut_concert(StatutConcert statut_concert) {
-		this.statut_concert = statut_concert;
+	public void setStatut_concert(StatutEvent statut_concert) {
+		this.statut_event = statut_concert;
 	}
 
 
@@ -181,8 +183,8 @@ public class Event implements Serializable {
 	@Override
 	public String toString() {
 		return "Event [eventId=" + eventId + ", nom=" + nom + ", description=" + description + ", artiste=" + artiste
-				+ ", lieu=" + lieu + ", dureeConcert=" + dureeConcert + ", genreMusical=" + genreMusical
-				+ ", nb_place_disponible=" + nb_place_disponible + ", statut_concert=" + statut_concert
+				+ ", lieu=" + lieu + ", dureeConcert=" + duree_event + ", genreMusical=" + genreMusical
+				+ ", nb_place_disponible=" + nb_place_disponible + ", statut_concert=" + statut_event
 				+ ", prix_ticket=" + prix_ticket + ", date_concert=" + date_concert + ", manager=" + manager
 				+ ", admin=" + admin + ", tickets=" + tickets + "]";
 	}
@@ -194,6 +196,14 @@ public class Event implements Serializable {
 	        throw new IllegalArgumentException("Plus de places disponibles");
 	    }
 	    this.nb_place_disponible--;
+	}
+	
+	
+	public boolean isDeleted() {
+		return is_deleted;
+	}
+	public void setDeleted(boolean is_deleted) {
+		this.is_deleted = is_deleted;
 	}
 	
     

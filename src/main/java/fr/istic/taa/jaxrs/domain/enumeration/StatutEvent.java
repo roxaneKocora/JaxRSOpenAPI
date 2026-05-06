@@ -1,6 +1,6 @@
 package fr.istic.taa.jaxrs.domain.enumeration;
 
-public enum StatutConcert {
+public enum StatutEvent {
 	
 	ATTENTE_VALIDATION, ANNULE, VALIDE
 
