@@ -27,6 +27,6 @@ public class RestServer {
 
         logger.info("JAX-RS based micro-service running! \n"
         		+ "API running on: http://localhost:8080 \n"
-        		+ "Swagger UI: http://localhost:8080/api/");
+        		+ "Swagger UI: http://localhost:8080/swagger-api/");
     }
 }

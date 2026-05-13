@@ -12,11 +12,11 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
 	}
 	
 	//Requete NamedQuery
-	public List<Event> findByDateEventNamedQuery(LocalDate date) {
+	public List<Event> findAvailableEventNamedQuery() {
 		
         		return entityManager
-	        		.createNamedQuery("Event.findByDateEvent", Event.class)
-	                .setParameter("dateConcert", date)
+	        		.createNamedQuery("Event.findAvailableEvent", Event.class)
+	                .setParameter("now", LocalDate.now())
 	                .getResultList();
     }
 	

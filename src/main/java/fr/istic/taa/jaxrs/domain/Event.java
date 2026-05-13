@@ -14,9 +14,9 @@ import jakarta.persistence.*;
 
 @Entity
 @NamedQuery(
-	    name = "Event.findByDateEvent",
-	    query = "SELECT e FROM Event e WHERE e.date_concert = :dateConcert AND e.is_deleted = false "
-	    		+ "AND e.statut_event != ANNULE"
+	    name = "Event.findAvailableEvent",
+	    query = "SELECT e FROM Event e WHERE e.date_concert > :now AND e.nb_place_disponible > 0"
+	    		+ "AND e.is_deleted = false AND e.statut_event != ANNULE"
 	)
 public class Event implements Serializable {
 

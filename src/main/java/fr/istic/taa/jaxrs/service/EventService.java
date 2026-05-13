@@ -73,11 +73,10 @@ public class EventService {
         return response;
     }
      
-    
-    //liste des evenements par date
-    public List<EventReponseDto> findEventsByDate(LocalDate date) {
+  //liste des evenements disponibles
+    public List<EventReponseDto> findAvailableEvents() {
     	
-	    List<Event> events = eventDao.findByDateEventNamedQuery(date);
+	    List<Event> events = eventDao.findAvailableEventNamedQuery();
 	    List<EventReponseDto> dtos = new ArrayList<>();
  
 

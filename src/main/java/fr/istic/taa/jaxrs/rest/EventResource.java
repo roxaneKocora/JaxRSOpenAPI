@@ -128,30 +128,23 @@ public class EventResource {
    
     //Événements par date
     @GET
-    @Path("all/date")
-    @Operation(summary = "Événements par date")
+    @Path("all/available")
+    @Operation(summary = "Événements disponibles")
     @ApiResponses({
-    	@ApiResponse(responseCode = "200", description = "Liste des événements",
+    	@ApiResponse(responseCode = "200", description = "Liste des événements disponibles",
 		        content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
-    	@ApiResponse(responseCode = "400", description = "Date obligatoire ou format invalide (attendu: YYYY-MM-DD)")
+    	@ApiResponse(responseCode = "400", description = "Données invalides")
     })
-    public Response findEventsByDate(
-            @Parameter(description = "Date au format YYYY-MM-DD", required = true)
-            @QueryParam("date") String dateStr) {
+    public Response findEventsByDate() {
     	
         try {
-            if (dateStr == null) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                               .entity("La date est obligatoire")
-                               .build();
-            }
-            LocalDate date = LocalDate.parse(dateStr);
-            return Response.ok(eventService.findEventsByDate(date)).build();
+
+            return Response.ok(eventService.findAvailableEvents()).build();
             
-        } catch (DateTimeParseException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                           .entity("Format de date invalide, utilisez YYYY-MM-DD")
-                           .build();
+         } catch (Exception e) {
+        	 return Response.status(Response.Status.BAD_REQUEST)
+                     .entity(e.getMessage())
+                     .build();
         }
     }
    
