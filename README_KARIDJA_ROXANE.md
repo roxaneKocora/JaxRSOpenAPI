@@ -8,20 +8,20 @@
 - Eclipse (ou tout IDE supportant Maven)
 
 ###Une fois le projet cloné
-1. Se placer sur la branche backend : *git checkout back* 
+1. Se placer sur la branche backend : **git checkout back** 
 
 2. Builder le projet avec Maven Faire un clic droit sur le projet → Run As → Maven Build
 
 3. Configurer la base de données: 
-	- Créer une base de données vide nommée *mydatabase* dans MySQL.
-	- Si votre configuration MySQL est différente (port, host, identifiants), ouvrez le fichier *src/main/resources/META-INF/persistence* et modifiez votre config. 
+	- Créer une base de données vide nommée **mydatabase** dans MySQL.
+	- Si votre configuration MySQL est différente (port, host, identifiants), ouvrez le fichier **src/main/resources/META-INF/persistence** et modifiez votre config. 
 
 4. Exécuter les migrations
-	Lancer la classe suivante pour créer les tables en base de données : *src/main/java/fr.istic.taa.jaxrs.jpa/JpaTest.java* 
+	Lancer la classe suivante pour créer les tables en base de données : **src/main/java/fr.istic.taa.jaxrs.jpa/JpaTest.java** 
 	puis faire Clic droit sur cette classe → Run As → Java Application
 
 5. Démarrer le serveur
-	Lancer la classe suivante pour démarrer le serveur REST : *src/main/java/fr.istic.taa.jaxrs.rest/RestServer.java* 
+	Lancer la classe suivante pour démarrer le serveur REST : **src/main/java/fr.istic.taa.jaxrs.rest/RestServer.java** 
 	puis faire Clic droit sur cette classe → Run As → Java Application
 
 Le serveur est maintenant opérationnel.
