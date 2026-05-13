@@ -28,7 +28,6 @@ public class ClientResource {
         this.clientService = new ClientService(clientDao, userDao);
     }
     
-
 	
 	@POST
 	@Path("/inscription")

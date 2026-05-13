@@ -50,7 +50,7 @@ L'application s'adresse à trois types d'utilisateurs :
 ## Modèle métier
 
 ### Diagramme de classe
-![Diagramme de classe](docs/diagramme.png)
+![Diagramme de classe](diagramme.png)
 
 ### Entités
 - **User** : représente un utilisateur de l'application (Client, Manager, Admin)
@@ -62,23 +62,18 @@ L'application s'adresse à trois types d'utilisateurs :
 
 ### Regles de gestion 
 1. Client
-- Il s'inscrit librement sur la plateforme sans intervention d'un administrateur.
+- Il s'inscrit librement sur la plateforme sans intervention d'un administrateur
 - Il ne peut acheter qu'un seul billet par événement.
-- Il peut consulter l'historique de ses achats, .... et les evenements disponibles.
-........annuler des achats................
+- Il peut consulter l'historique de ses achats, et les evenements disponibles
+
 2. Manager
 - Il est créé uniquement par un administrateur et un mot de passe generique est affecté au manager que lui meme pourra modifier.
-- Il gère exclusivement ses propres événements (creer, modifier, supprimer des events ou ajouter des infos...)
-- Il gère le stock de ticket pour ses evenemnts.
-.........Suivre les ventes et consulter les statistiques de son événement............
+- Il gère exclusivement ses propres événements (creer, modifier, ou supprimer des events)
+- Il gère le stock de ticket pour ses événements et suit les ventes des tickets de son événement
+
 3. Administrateur
 - Il est créé et géré uniquement par le Super Administrateur(SUPER_ADMIN).
 - Il a une vue globale sur l'ensemble des événements et des transactions de la plateforme.
-- Il peut effectuer les actions suivantes sur les utilisateurs (clients et managers) : Valider, bloquer / débloquer un compte
-
-.......Il existe un seul Super Administrateur dans le système, défini directement en base de données.
-Il est le seul à pouvoir créer, modifier ou supprimer des comptes Administrateurs.............
-
-
+- Il peut effectuer les actions suivantes sur les utilisateurs (clients et managers) : Valider, bloquer / débloquer un compte.
 
 

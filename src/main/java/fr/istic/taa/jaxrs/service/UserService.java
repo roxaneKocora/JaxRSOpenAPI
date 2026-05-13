@@ -22,7 +22,7 @@ public class UserService {
     }
 	
 
-	//1-Methode seConnecter
+	// Methode seConnecter
 	public UserResponseDto seConnecter(ConnexionDto dto) {
 	    // 1. On demande au DAO de nous donner l'utilisateur par son email
 	    User user = userDao.findByEmailNamedQuery(dto.getEmail());
@@ -54,7 +54,7 @@ public class UserService {
 	}
 
 
-	//2- Modifier MDP
+	// Modifier MDP
 	public void changerMdp(Long user_id, PasswordDto dto) throws Exception {
 	
 	    User user = userDao.findOne(user_id);
@@ -77,7 +77,7 @@ public class UserService {
 	}
 	
 
-	//3- Suspendre Utilisateur
+	// Suspendre Utilisateur
     public UserResponseDto suspendreUtilisateur(Long userId, StatutUserDto dto) {
         User user = userDao.findOne(userId);
 
@@ -108,7 +108,7 @@ public class UserService {
     }
     
     
-	//4- Liste des utilisateurs
+	// Liste des utilisateurs
 	public List<UserResponseDto> listeUtilisateurs() {
 	    List<User> users = userDao.findAllUser();
 	    List<UserResponseDto> dtos = new ArrayList<>();
@@ -128,7 +128,7 @@ public class UserService {
 	}
 	
 
-    //5- afficher un User
+    // afficher un User
     public UserResponseDto findUserById(Long userId) {
 
 	    User user = userDao.findOne(userId);
@@ -148,4 +148,6 @@ public class UserService {
 
         return dto;
     }
+
+    
 }

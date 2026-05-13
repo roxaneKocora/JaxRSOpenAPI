@@ -1,7 +1,6 @@
 package fr.istic.taa.jaxrs.domain;
 
 import jakarta.persistence.Embeddable;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -22,6 +21,7 @@ public class TicketId implements Serializable {
     
 
     //GETTERS - SETTERS
+    
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     

@@ -1,11 +1,8 @@
 package fr.istic.taa.jaxrs.rest;
 
 import fr.istic.taa.jaxrs.dao.UserDao;
-import fr.istic.taa.jaxrs.domain.Ticket;
 import fr.istic.taa.jaxrs.dto.ConnexionDto;
-import fr.istic.taa.jaxrs.dto.EventReponseDto;
 import fr.istic.taa.jaxrs.dto.PasswordDto;
-import fr.istic.taa.jaxrs.dto.StatutDTO;
 import fr.istic.taa.jaxrs.dto.StatutUserDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import fr.istic.taa.jaxrs.service.UserService;
@@ -32,46 +29,46 @@ public class UserResource {
         this.userService = new UserService(userDao);
     }
 
-    // Connexion
-		@POST
-		@Path("/connexion")
-		@Consumes("application/json")
-		@Operation(summary = "Se connecter", description = "Permet à un utilisateur de se connecter")
-		@ApiResponses({
-		    @ApiResponse(responseCode = "200", description = "Connexion réussie",
-		        content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
-		    @ApiResponse(responseCode = "401", description = "Email ou mot de passe incorrect")
-		})
-	  public Response connexion(
-			    @RequestBody(
-			            description = "Email et mot de passe de l'utilisateur",
-			            required = true,
-			            content = @Content(schema = @Schema(implementation = ConnexionDto.class))
-			        )
-			    ConnexionDto dto) {
-
-	    // user contient juste email + password
-	    try {
-			UserResponseDto response = userService.seConnecter(dto);
-	        return Response.ok(response).build();
-	    } catch (Exception e) {
-	        return Response.status(401).entity("Email ou mot de passe incorrect").build();
-	    }
-	    
-	  }
-	  
-
-	// Modification mot de passe
-	  @PUT
-	  @Path("/updatePassword/user_id/{user_id}")
-	  @Consumes("application/json")
-	  @Operation(summary = "Modifier le mot de passe", description = "Permet de changer le mot de passe d'un utilisateur")
-	  @ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Mot de passe modifié avec succès"),
-		@ApiResponse(responseCode = "400", description = "Ancien mot de passe incorrect ou données invalides"),
-		@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
-		})
-	  public Response modifierPassword(
+	    // Connexion
+			@POST
+			@Path("/connexion")
+			@Consumes("application/json")
+			@Operation(summary = "Se connecter", description = "Permet à un utilisateur de se connecter")
+			@ApiResponses({
+			    @ApiResponse(responseCode = "200", description = "Connexion réussie",
+			        content = @Content(schema = @Schema(implementation = UserResponseDto.class))),
+			    @ApiResponse(responseCode = "401", description = "Email ou mot de passe incorrect")
+			})
+		  public Response connexion(
+				    @RequestBody(
+				            description = "Email et mot de passe de l'utilisateur",
+				            required = true,
+				            content = @Content(schema = @Schema(implementation = ConnexionDto.class))
+				        )
+				    ConnexionDto dto) {
+	
+		    // user contient juste email + password
+		    try {
+				UserResponseDto response = userService.seConnecter(dto);
+		        return Response.ok(response).build();
+		    } catch (Exception e) {
+		        return Response.status(401).entity("Email ou mot de passe incorrect").build();
+		    }
+		    
+		  }
+		  
+	
+		// Modification mot de passe
+		  @PUT
+		  @Path("/updatePassword/user_id/{user_id}")
+		  @Consumes("application/json")
+		  @Operation(summary = "Modifier le mot de passe", description = "Permet de changer le mot de passe d'un utilisateur")
+		  @ApiResponses({
+			@ApiResponse(responseCode = "200", description = "Mot de passe modifié avec succès"),
+			@ApiResponse(responseCode = "400", description = "Ancien mot de passe incorrect ou données invalides"),
+			@ApiResponse(responseCode = "404", description = "Utilisateur non trouvé")
+			})
+		  public Response modifierPassword(
 			    @Parameter(description = "ID de l'utilisateur", required = true, example = "1")
 			    @PathParam("user_id") Long user_id,
 			    
@@ -101,6 +98,7 @@ public class UserResource {
 	    public Response listeUtilisateurs() {
 	        return Response.ok(userService.listeUtilisateurs()).build();
 	    }
+	    
 	    
 	    //aficher un user
 		@GET

@@ -2,14 +2,12 @@ package fr.istic.taa.jaxrs.domain;
 
 import java.io.Serializable;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 
 @Entity
-//Requete NamedQuery
 @NamedQuery(
 	    name = "Manager.findByEmail",
 	    query = "SELECT m FROM Manager m WHERE m.email = :emailValue"
@@ -18,7 +16,6 @@ public class Manager extends User implements Serializable {
 	
 	private String manager_agence;
 	@OneToMany(mappedBy = "manager", cascade = CascadeType.PERSIST)
-	//@JsonManagedReference
     private List<Event> events;
 
 

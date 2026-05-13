@@ -2,18 +2,14 @@ package fr.istic.taa.jaxrs.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.mindrot.jbcrypt.BCrypt;
 
 import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.UserDao;
 import fr.istic.taa.jaxrs.domain.Admin;
-import fr.istic.taa.jaxrs.domain.Manager;
-import fr.istic.taa.jaxrs.domain.User;
 import fr.istic.taa.jaxrs.domain.enumeration.NiveauAdmin;
 import fr.istic.taa.jaxrs.domain.enumeration.Role;
 import fr.istic.taa.jaxrs.dto.EnregistrerAdminDto;
-import fr.istic.taa.jaxrs.dto.EnregistrerManagerDto;
 import fr.istic.taa.jaxrs.dto.UserResponseDto;
 
 public class AdminService {
@@ -28,7 +24,7 @@ public class AdminService {
     }
 
 
-	//1-Methode metier ajouter Manager
+	// Ajouter Admin
 	public UserResponseDto ajouterAdmin(EnregistrerAdminDto dto) throws Exception {
 		
 	    if (this.userDao.findByEmailNamedQuery(dto.getEmail()) != null) {
@@ -45,7 +41,7 @@ public class AdminService {
 	    admin.setRole(Role.ADMIN);
 	    admin.setAdmin_niveau(NiveauAdmin.ADMIN);
 
-		//Utilise le password envoyé par le formulaire
+		
 	    admin.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()));
 	    
 	    this.adminDao.save(admin); 
@@ -86,5 +82,6 @@ public class AdminService {
 	    }
 	    return dtos;
 	}
+	
 	
 }

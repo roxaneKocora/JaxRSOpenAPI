@@ -2,7 +2,6 @@ package fr.istic.taa.jaxrs;
 
 import io.undertow.Undertow;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
-
 import java.util.logging.Logger;
 
 /**
@@ -17,9 +16,8 @@ public class RestServer {
 
         UndertowJaxrsServer ut = new UndertowJaxrsServer();
 
-        TestApplication ta = new TestApplication();
 
-        ut.deploy(ta);
+        ut.deploy(TestApplication.class);
 
         ut.start(
                 Undertow.builder()
@@ -27,6 +25,8 @@ public class RestServer {
 
         );
 
-        logger.info("JAX-RS based micro-service running!");
+        logger.info("JAX-RS based micro-service running! \n"
+        		+ "API running on: http://localhost:8080 \n"
+        		+ "Swagger UI: http://localhost:8080/api/");
     }
 }

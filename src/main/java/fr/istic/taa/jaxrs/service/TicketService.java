@@ -25,8 +25,6 @@ public class TicketService {
         this.ticketDao = ticketDao;
     }
     
-
-
     // Acheter Ticket
     @Transactional
     public Ticket acheterTicket(AchatTicketDto dto) {
@@ -55,7 +53,7 @@ public class TicketService {
             throw new IllegalStateException("Vous avez déjà un ticket pour cet event");
         }
         
-        // 3. CREATION DU TICLKET
+        // 4. CREATION DU TICLKET
         Ticket ticket = new Ticket();
         ticket.setId(ticket_id);
         ticket.setStatut(StatutTicket.ACHETE);
@@ -85,7 +83,7 @@ public class TicketService {
     }
     
 
-    // Liste des Tickets par event
+    // Liste des Tickets pour un client 
     public List<Ticket> findTicketsByClientId(Long clientId) {
     	
         if (this.eventDao.findOne(clientId) == null) {

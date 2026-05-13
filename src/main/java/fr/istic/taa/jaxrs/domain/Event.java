@@ -4,21 +4,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-
-import fr.istic.taa.jaxrs.domain.enumeration.Role;
 import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 import jakarta.persistence.*;
 
 @Entity
-//Requete NamedQuery
 @NamedQuery(
 	    name = "Event.findByDateEvent",
 	    query = "SELECT e FROM Event e WHERE e.date_concert = :dateConcert AND e.is_deleted = false "
@@ -51,17 +45,14 @@ public class Event implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "managerId", nullable = false)
-    //@JsonBackReference
     private Manager manager;
 
     @ManyToOne
     @JoinColumn(name = "adminId", nullable = true)
-    //@JsonBackReference
     private Admin admin;
 
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST)
-	//@JsonManagedReference
     private List<Ticket> tickets;
 
     
@@ -154,6 +145,14 @@ public class Event implements Serializable {
 		this.date_concert = date_concert;
 	}
 
+	
+	public boolean isDeleted() {
+		return is_deleted;
+	}
+	public void setDeleted(boolean is_deleted) {
+		this.is_deleted = is_deleted;
+	}
+	
 
 	public Manager getManager() {
 		return manager;
@@ -196,14 +195,6 @@ public class Event implements Serializable {
 	        throw new IllegalArgumentException("Plus de places disponibles");
 	    }
 	    this.nb_place_disponible--;
-	}
-	
-	
-	public boolean isDeleted() {
-		return is_deleted;
-	}
-	public void setDeleted(boolean is_deleted) {
-		this.is_deleted = is_deleted;
 	}
 	
     

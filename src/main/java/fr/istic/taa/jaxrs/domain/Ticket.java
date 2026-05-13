@@ -1,7 +1,6 @@
 package fr.istic.taa.jaxrs.domain;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -13,14 +12,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import fr.istic.taa.jaxrs.domain.enumeration.StatutTicket;
 import jakarta.persistence.*;
-/*import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;*/
+
 
 @Entity
-//Requete NamedQuery
 @NamedQuery(
 	    name = "Ticket.findByClientId",
 	    query = "SELECT t FROM Ticket t WHERE t.client.userId = :client_id"

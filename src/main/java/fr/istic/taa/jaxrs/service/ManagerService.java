@@ -17,7 +17,7 @@ public class ManagerService {
         this.userDao = userDao;
     }
 	
-	//1-Methode metier ajouter Manager
+	// Ajouter Manager
 	public UserResponseDto ajouterManager(EnregistrerManagerDto dto) throws Exception {
 		
 	    if (this.userDao.findByEmailNamedQuery(dto.getEmail()) != null) {
@@ -34,7 +34,7 @@ public class ManagerService {
 	    manager.setRole(Role.MANAGER);
 	    manager.setManager_agence(dto.getManager_agence());
 
-		//Utilise le password envoyé par le formulaire
+		
 		manager.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()));
 	    
 	    this.managerDao.save(manager); 

@@ -2,11 +2,8 @@ package fr.istic.taa.jaxrs.dao;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import fr.istic.taa.jaxrs.dao.generic.AbstractJpaDao;
 import fr.istic.taa.jaxrs.domain.Event;
-import fr.istic.taa.jaxrs.domain.Manager;
-import fr.istic.taa.jaxrs.domain.Ticket;
 
 public class EventDao extends AbstractJpaDao<Long, Event> {
 

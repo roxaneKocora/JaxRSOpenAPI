@@ -18,26 +18,13 @@ package fr.istic.taa.jaxrs;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import fr.istic.taa.jaxrs.rest.*;
-import io.swagger.v3.jaxrs2.integration.resources.AcceptHeaderOpenApiResource;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 @ApplicationPath("/")
-//@OpenAPIDefinition(
-//	    info = @Info(
-//	        title = "API Gestion Concerts",
-//	        version = "1.0",
-//	        description = "API de gestion de concerts, tickets et utilisateurs"
-//	    )
-//	)
-//clazzes.add(AcceptHeaderOpenApiResource.class);
 public class TestApplication extends Application {
-	
 
     @Override
     public Set<Class<?>> getClasses() {

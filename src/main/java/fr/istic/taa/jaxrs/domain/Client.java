@@ -2,9 +2,7 @@ package fr.istic.taa.jaxrs.domain;
 
 import java.io.Serializable;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +15,8 @@ public class Client extends User implements Serializable{
     private List<Ticket> tickets; 
 
 	
-	//GETTERS - SETTERS
 	
+	//GETTERS - SETTERS
 
 	public boolean isClient_newsletter() {
 		return client_newsletter;

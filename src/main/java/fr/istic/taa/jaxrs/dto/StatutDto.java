@@ -2,10 +2,11 @@ package fr.istic.taa.jaxrs.dto;
 
 import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 
-public class StatutDTO {
+public class StatutDto {
 
     private StatutEvent statut_concert;
 
+    
 	public StatutEvent getStatut_concert() {
 		return statut_concert;
 	}

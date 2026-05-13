@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.Path;
 
-@Path("/api")
+@Path("/swagger-api")
 public class SwaggerResource {
 
     private static final Logger logger = Logger.getLogger(SwaggerResource.class.getName());

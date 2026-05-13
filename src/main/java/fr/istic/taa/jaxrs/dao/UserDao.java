@@ -1,10 +1,8 @@
 package fr.istic.taa.jaxrs.dao;
 
 import java.util.List;
-
 import fr.istic.taa.jaxrs.dao.generic.AbstractJpaDao;
 import fr.istic.taa.jaxrs.domain.*;
-import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -25,11 +23,11 @@ public class UserDao extends AbstractJpaDao<Long, User> {
                 .setParameter("emailValue", email)
                 .getSingleResult();
 	    } catch (NoResultException e) {
-	        return null; // aucun utilisateur trouvé
+	        return null; 
 	    }
     }
 	
-	// Criteria Query : On construit la requête avec du code Java. 
+	// Criteria Query 
 	public List<User> findAllUser() {
 	    
 	    CriteriaBuilder cb = entityManager.getCriteriaBuilder();

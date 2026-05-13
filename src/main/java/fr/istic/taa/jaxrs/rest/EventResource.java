@@ -6,12 +6,9 @@ import java.time.format.DateTimeParseException;
 import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
-import fr.istic.taa.jaxrs.domain.Event;
-import fr.istic.taa.jaxrs.dto.ConnexionDto;
 import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.dto.EventReponseDto;
-import fr.istic.taa.jaxrs.dto.StatutDTO;
-import fr.istic.taa.jaxrs.dto.UserResponseDto;
+import fr.istic.taa.jaxrs.dto.StatutDto;
 import fr.istic.taa.jaxrs.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,7 +66,7 @@ public class EventResource {
 	        }
     }
     
-
+    
     //aficher un event
 	@GET
 	@Path("/{eventId}")
@@ -128,7 +125,7 @@ public class EventResource {
         
     }
     
-    
+   
     //Événements par date
     @GET
     @Path("all/date")
@@ -157,6 +154,7 @@ public class EventResource {
                            .build();
         }
     }
+   
     
     //valider ou non un evenement
     @PATCH
@@ -176,11 +174,11 @@ public class EventResource {
 	    @RequestBody(
 	            description = "Example valeurs du champ : ANNULE, VALIDE",
 	            required = true,
-	            content = @Content(schema = @Schema(implementation = StatutDTO.class))
-	        )StatutDTO statutDTO) {        
+	            content = @Content(schema = @Schema(implementation = StatutDto.class))
+	        )StatutDto statutDto) {        
 
         try {
-            return Response.ok(eventService.updateStatut(eventId, adminId, statutDTO.getStatut_concert())).build();
+            return Response.ok(eventService.updateStatut(eventId, adminId, statutDto.getStatut_concert())).build();
             
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -188,6 +186,7 @@ public class EventResource {
                            .build();
         }
     }
+ 
     
     //supprimer un evenement
     @DELETE

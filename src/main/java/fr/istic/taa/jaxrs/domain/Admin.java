@@ -2,15 +2,11 @@ package fr.istic.taa.jaxrs.domain;
 
 import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import fr.istic.taa.jaxrs.domain.enumeration.NiveauAdmin;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -20,7 +16,6 @@ public class Admin extends User implements Serializable  {
 	private NiveauAdmin admin_niveau;
 
 	@OneToMany(mappedBy = "admin", cascade = CascadeType.PERSIST)
-	//@JsonManagedReference
     private List<Event> events;
 
 

@@ -3,18 +3,15 @@ package fr.istic.taa.jaxrs.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
 import fr.istic.taa.jaxrs.domain.Admin;
 import fr.istic.taa.jaxrs.domain.Event;
 import fr.istic.taa.jaxrs.domain.Manager;
-import fr.istic.taa.jaxrs.domain.User;
 import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.dto.EventReponseDto;
-import fr.istic.taa.jaxrs.dto.UserResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 
 public class EventService {

@@ -6,7 +6,6 @@ import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.TicketDao;
 import fr.istic.taa.jaxrs.domain.Ticket;
 import fr.istic.taa.jaxrs.dto.AchatTicketDto;
-import fr.istic.taa.jaxrs.dto.EventDto;
 import fr.istic.taa.jaxrs.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,6 +70,7 @@ public class TicketResource {
 		}
 	}
     
+	//afficher un ticket
 	@GET
 	@Path("/{clientId}/{eventId}")
     @Operation(
@@ -105,8 +105,7 @@ public class TicketResource {
                            .build();
         }
 	}
-	
-	
+		
 	
     //liste des tickets par client
     @GET
@@ -141,7 +140,6 @@ public class TicketResource {
     }
     
 
-
     //liste des tickets par event
     @GET
     @Path("/all/event/{eventId}")
@@ -175,7 +173,7 @@ public class TicketResource {
     }
     
     
-    ///////
+    //liste des tickets vendus
     @GET
     @Path("/total/event/{eventId}")
     @Operation(
