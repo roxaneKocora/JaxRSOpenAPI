@@ -26,17 +26,17 @@
 
 Le serveur est maintenant opérationnel.
 
-## Quelque Endpoints
+## Quelques Endpoints
 | Méthode | URL | Description |
 |---------|-----|-------------|
 | POST | http://localhost:8080/client/inscription | s'inscrire comme client |
-| POST | http://localhost:8080/managr/ajouter | enregistrer un manager |
+| POST | http://localhost:8080/manager/ajouter | enregistrer un manager |
 | POST | http://localhost:8080/event/create | Créer un événement |
 | GET | http://localhost:8080/event/all/{managerId} | Événements par manager |
 | POST | http://localhost:8080/ticket/acheter | acheter un ticket |
 
 ## Swagger
-La documentation complète est disponible à :
+La documentation complète des api est disponible à :
  **http://localhost:8080/api/**
 
 ## Description du projet
