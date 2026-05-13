@@ -135,7 +135,6 @@ public class EventResource {
             @ApiResponse(responseCode = "400", description = "Données invalides")
     })
     public Response findEventsByDate() {
-
         try {
 
             return Response.ok(eventService.findAvailableEvents()).build();
