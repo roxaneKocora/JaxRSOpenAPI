@@ -150,7 +150,6 @@ public class EventService {
         if (event == null) {
             throw new EntityNotFoundException("Event introuvable");
         }
-
         EventReponseDto response = new EventReponseDto();
         response.setEventId(event.getEventId());
         response.setNom(event.getNom());
@@ -245,4 +244,27 @@ public class EventService {
         eventDao.update(event);
     }
 
+    // Recupère tous les events
+    public List<EventReponseDto> getAllEvents() {
+        List<Event> events = eventDao.findAll();
+        List<EventReponseDto> dtos = new ArrayList<>();
+        for (Event e : events) {
+            EventReponseDto dto = new EventReponseDto();
+            dto.setEventId(e.getEventId());
+            dto.setNom(e.getNom());
+            dto.setDescription(e.getDescription());
+            dto.setArtiste(e.getArtiste());
+            dto.setLieu(e.getLieu());
+            dto.setGenreMusical(e.getGenreMusical());
+            dto.setNbPlaceDispo(e.getNb_place_disponible());
+            dto.setDureeConcert(e.getDureeConcert());
+            dto.setPrix_ticket(e.getPrix_ticket());
+            dto.setStatut_concert(e.getStatut_concert());
+            dto.setDateConcert(e.getDate_concert());
+            dto.setManagerId(e.getManager() != null ? e.getManager().getUserId() : null);
+            dto.setAdminId(e.getAdmin() != null ? e.getAdmin().getUserId() : null);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
 }

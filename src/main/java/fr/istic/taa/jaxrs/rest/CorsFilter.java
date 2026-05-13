@@ -22,7 +22,7 @@ public class CorsFilter implements ContainerRequestFilter, ContainerResponseFilt
     @Override
     public void filter(ContainerRequestContext req, ContainerResponseContext res) {
         res.getHeaders().add("Access-Control-Allow-Origin", "http://localhost:4200");
-        res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH ,OPTIONS");
         res.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.getHeaders().add("Access-Control-Allow-Credentials", "true");
     }

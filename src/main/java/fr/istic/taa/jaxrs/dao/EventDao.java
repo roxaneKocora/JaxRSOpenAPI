@@ -2,6 +2,7 @@ package fr.istic.taa.jaxrs.dao;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import fr.istic.taa.jaxrs.dao.generic.AbstractJpaDao;
 import fr.istic.taa.jaxrs.domain.Event;
 
@@ -10,15 +11,14 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
 	public EventDao() {
 		this.setClazz(Event.class);
 	}
-	
-	//Requete NamedQuery
+
 	public List<Event> findAvailableEventNamedQuery() {
-		
-        		return entityManager
-	        		.createNamedQuery("Event.findAvailableEvent", Event.class)
-	                .setParameter("now", LocalDate.now())
-	                .getResultList();
-    }
+
+		return entityManager
+				.createNamedQuery("Event.findAvailableEvent", Event.class)
+				.setParameter("now", LocalDate.now())
+				.getResultList();
+	}
 	
 
     //Requête JPQL
@@ -31,5 +31,12 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
                     .getResultList();
             
     }
+
+
+	public List<Event> findAll() {
+		return entityManager
+				.createQuery("SELECT e FROM Event e WHERE e.is_deleted = false", Event.class)
+				.getResultList();
+	}
 
 }

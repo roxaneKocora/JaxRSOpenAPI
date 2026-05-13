@@ -6,9 +6,8 @@ import java.time.format.DateTimeParseException;
 import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
-import fr.istic.taa.jaxrs.dto.EventDto;
-import fr.istic.taa.jaxrs.dto.EventReponseDto;
-import fr.istic.taa.jaxrs.dto.StatutDto;
+import fr.istic.taa.jaxrs.domain.Event;
+import fr.istic.taa.jaxrs.dto.*;
 import fr.istic.taa.jaxrs.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +27,7 @@ import jakarta.ws.rs.core.Response;
 public class EventResource {
 	
     private EventService eventService;
-
+    private StatutDto statutDTO;
     public EventResource() {
     	EventDao eventDao = new EventDao();
     	AdminDao adminDao = new AdminDao();
@@ -66,8 +65,8 @@ public class EventResource {
 	        }
     }
     
-    
-    //aficher un event
+
+    //afficher un event
 	@GET
 	@Path("/{eventId}")
     @Operation(
@@ -124,30 +123,28 @@ public class EventResource {
 	        }
         
     }
-    
-   
+
     //Événements par date
     @GET
     @Path("all/available")
     @Operation(summary = "Événements disponibles")
     @ApiResponses({
-    	@ApiResponse(responseCode = "200", description = "Liste des événements disponibles",
-		        content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
-    	@ApiResponse(responseCode = "400", description = "Données invalides")
+            @ApiResponse(responseCode = "200", description = "Liste des événements disponibles",
+                    content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Données invalides")
     })
     public Response findEventsByDate() {
-    	
+
         try {
 
             return Response.ok(eventService.findAvailableEvents()).build();
-            
-         } catch (Exception e) {
-        	 return Response.status(Response.Status.BAD_REQUEST)
-                     .entity(e.getMessage())
-                     .build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
         }
     }
-   
     
     //valider ou non un evenement
     @PATCH
@@ -167,11 +164,11 @@ public class EventResource {
 	    @RequestBody(
 	            description = "Example valeurs du champ : ANNULE, VALIDE",
 	            required = true,
-	            content = @Content(schema = @Schema(implementation = StatutDto.class))
-	        )StatutDto statutDto) {        
-
+                content = @Content(schema = @Schema(implementation = StatutDto.class))
+        )StatutDto statutDto) {
         try {
-            return Response.ok(eventService.updateStatut(eventId, adminId, statutDto.getStatut_concert())).build();
+
+            return Response.ok(eventService.updateStatut(eventId, adminId, statutDTO.getStatut_concert())).build();
             
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -179,7 +176,6 @@ public class EventResource {
                            .build();
         }
     }
- 
     
     //supprimer un evenement
     @DELETE
@@ -209,6 +205,15 @@ public class EventResource {
                            .build();
         }
     }
-    
+
+    @GET
+    @Path("/all")
+    @Operation(summary = "Lister tous les événements")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Liste des événements")
+    })
+    public Response getAllEvents() {
+        return Response.ok(eventService.getAllEvents()).build();
+    }
 
 }
