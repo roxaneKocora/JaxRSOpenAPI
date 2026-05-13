@@ -1,149 +1,79 @@
-## JaxRS + openAPI
+# Nom du Projet : E-Ticket
 
-1. Import this project in your IDE, 
-2. Start the database
-3. Start the database viewer
-4. Start the backend. There is a main class to start the backend
+## Lancer le projet
 
+###Prérequis
+- Java & Maven installés
+- Un serveur MySQL en cours d'exécution
+- Eclipse (ou tout IDE supportant Maven)
 
+###Une fois le projet cloné
+1. Se placer sur la branche backend : **git checkout back** 
 
+2. Builder le projet avec Maven Faire un clic droit sur le projet → Run As → Maven Build
 
-# Task Open API Integration 
+3. Configurer la base de données: 
+	- Créer une base de données vide nommée **mydatabase** dans MySQL.
+	- Si votre configuration MySQL est différente (port, host, identifiants), ouvrez le fichier **src/main/resources/META-INF/persistence** et modifiez votre config. 
 
-Now, we would like to ensure that our API can be discovered. The OpenAPI Initiative (OAI) was created by a consortium of forward-looking industry experts who recognize the immense value of standardizing on how REST APIs are described. As an open governance structure under the Linux Foundation, the OAI is focused on creating, evolving and promoting a vendor neutral description format. 
+4. Exécuter les migrations
+	Lancer la classe suivante pour créer les tables en base de données : **src/main/java/fr.istic.taa.jaxrs.jpa/JpaTest.java** 
+	puis faire Clic droit sur cette classe → Run As → Java Application
 
-APIs form the connecting glue between modern applications. Nearly every application uses APIs to connect with corporate data sources, third party data services or other applications. Creating an open description format for API services that is vendor neutral, portable and open is critical to accelerating the vision of a truly connected world.
+5. Démarrer le serveur
+	Lancer la classe suivante pour démarrer le serveur REST : **src/main/java/fr.istic.taa.jaxrs.rest/RestServer.java** 
+	puis faire Clic droit sur cette classe → Run As → Java Application
 
-To do this integration first, I already add a dependencies to openAPI libraries. 
+Le serveur est maintenant opérationnel.
 
-```xml
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-jaxrs2-jakarta</artifactId>
-			<version>2.2.15</version>
-		</dependency>
+## Quelques Endpoints
+| Méthode | URL | Description |
+|---------|-----|-------------|
+| POST | http://localhost:8080/client/inscription | s'inscrire comme client |
+| POST | http://localhost:8080/manager/ajouter | enregistrer un manager |
+| POST | http://localhost:8080/event/create | Créer un événement |
+| GET | http://localhost:8080/event/all/{managerId} | Événements par manager |
+| POST | http://localhost:8080/ticket/acheter | acheter un ticket |
 
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-jaxrs2-servlet-initializer-v2</artifactId>
-			<version>2.2.15</version>
-		</dependency>
-```
+## Swagger
+La documentation complète des api est disponible à :
+ **http://localhost:8080/swagger-api/**
 
-Next you have to add OpenAPI Resource to your application
-
-Your application could be something like that. 
-
-```java
-@ApplicationPath("/")
-public class RestApplication extends Application {
-
-	@Override
-	public Set<Class<?>> getClasses() {
-		final Set<Class<?>> resources = new HashSet<>();
-
-
-		// SWAGGER endpoints
-		resources.add(OpenApiResource.class);
-
-        //Your own resources. 
-        resources.add(PersonResource.class);
-....
-		return resources;
-	}
-}
-```
-
-Next start your server, you must have your api description available at [http://localhost:8080/openapi.json](http://localhost:8080/openapi.json)
-
-### Integrate Swagger UI. 
-
-Next we have to integrate Swagger UI. We will first download it.
-https://github.com/swagger-api/swagger-ui
-
-Copy dist folder content in src/main/webapp/swagger in your project. 
-
-Edit index.html file to automatically load your openapi.json file. 
-
-At the end of the index.html, your must have something like that.
-
-```js
-   // Build a system
-      const ui = SwaggerUIBundle({
-        url: "http://localhost:8080/openapi.json",
-        dom_id: '#swagger-ui',
-        
-        ...
-```
-
-Next add a new resources to create a simple http server when your try to access to http://localhost:8080/api/.
-
-This new resources can be developped as follows
-
-```java
-package app.web.rest;
-
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.logging.Logger;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
-@Path("/api")
-public class SwaggerResource {
-
-    private static final Logger logger = Logger.getLogger(SwaggerResource.class.getName());
-
-    @GET
-    public byte[] Get1() {
-        try {
-            return Files.readAllBytes(FileSystems.getDefault().getPath("src/main/webapp/swagger/index.html"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    @GET
-    @Path("{path:.*}")
-    public byte[] Get(@PathParam("path") String path) {
-        try {
-            return Files.readAllBytes(FileSystems.getDefault().getPath("src/main/webapp/swagger/"+path));
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-}
-```
-
-Add this new resources in your application
-
-```java
-@ApplicationPath("/")
-public class RestApplication extends Application {
+## Description du projet
+Il s'agit d'une application web de billetterie en ligne dédiée à la gestion et à la vente de billets pour des événements (concerts, spectacles, etc.).
+L'application s'adresse à trois types d'utilisateurs :
+- Les clients peuvent parcourir le catalogue d'événements disponibles et acheter leurs billets directement en ligne.
+- Les managers peuvent gérer leurs événements : dates, lieux, capacités, tarifs, etc.
+- Les administrateurs gèreent l'ensemble des utilisateurs de la plateforme (validation, suspension, suppression de comptes, etc.).
 
 
-	@Override
-	public Set<Class<?>> getClasses() {
-		final Set<Class<?>> resources = new HashSet<>();
+## Modèle métier
+
+### Diagramme de classe
+![Diagramme de classe](diagramme.png)
+
+### Entités
+- **User** : représente un utilisateur de l'application (Client, Manager, Admin)
+- **Manager** : hérite de User, gère les événements 
+- **Admin** : hérite de User, valide les événements
+- **Client** : hérite de User, s'incrit sur la plateforme et achete les tickets pour des evements
+- **Event** : un événement créé par un Manager
+- **Ticket** : acheté par un Client pour un événement (Event)
+
+### Regles de gestion 
+1. Client
+- Il s'inscrit librement sur la plateforme sans intervention d'un administrateur
+- Il ne peut acheter qu'un seul billet par événement.
+- Il peut consulter l'historique de ses achats, et les evenements disponibles
+
+2. Manager
+- Il est créé uniquement par un administrateur et un mot de passe generique est affecté au manager que lui meme pourra modifier.
+- Il gère exclusivement ses propres événements (creer, modifier, ou supprimer des events)
+- Il gère le stock de ticket pour ses événements et suit les ventes des tickets de son événement
+
+3. Administrateur
+- Il est créé et géré uniquement par le Super Administrateur(SUPER_ADMIN).
+- Il a une vue globale sur l'ensemble des événements et des transactions de la plateforme.
+- Il peut effectuer les actions suivantes sur les utilisateurs (clients et managers) : Valider, bloquer / débloquer un compte.
 
 
-		// SWAGGER endpoints
-		resources.add(OpenApiResource.class);
-		resources.add(PersonResource.class);
-        //NEW LINE TO ADD
-		resources.add(SwaggerResource.class);
-
-		return resources;
-	}
-}
-```
-
-Restart your server and access to http://localhost:8080/api/, you should access to a swagger ui instance that provides documentation on your api. 
-
-You can follow this guide to show how you can specialise the documentation through annotations.
-
-https://github.com/swagger-api/swagger-samples/blob/2.0/java/java-resteasy-appclasses/src/main/java/io/swagger/sample/resource/PetResource.java

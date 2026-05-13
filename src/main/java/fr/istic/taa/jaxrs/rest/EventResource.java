@@ -1,5 +1,215 @@
 package fr.istic.taa.jaxrs.rest;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
+import fr.istic.taa.jaxrs.dao.AdminDao;
+import fr.istic.taa.jaxrs.dao.EventDao;
+import fr.istic.taa.jaxrs.dao.ManagerDao;
+import fr.istic.taa.jaxrs.domain.Event;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
+import fr.istic.taa.jaxrs.dto.*;
+import fr.istic.taa.jaxrs.service.EventService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+
+
+@Path("event")
+@Produces({"application/json", "application/xml"})
+@Tag(name = "Event", description = "Gestion des evenements (concerts)")
 public class EventResource {
+	
+    private EventService eventService;
+    private StatutDto statutDTO;
+    public EventResource() {
+    	EventDao eventDao = new EventDao();
+    	AdminDao adminDao = new AdminDao();
+    	ManagerDao managerDao = new ManagerDao();
+        this.eventService = new EventService(managerDao, adminDao, eventDao);
+    } 
+    
+    //Créer un événement
+    @POST
+    @Path("/create")
+	@Consumes("application/json")
+    @Operation(summary = "Créer un événement")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Événement créé",
+            content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Manager introuvable ou Données invalides")
+    })
+    public Response creerEvent(
+		    @RequestBody(
+		            description = "Email et mot de passe de l'utilisateur",
+		            required = true,
+		            content = @Content(schema = @Schema(implementation = EventDto.class))
+		        )
+		    EventDto dto) {
+    	    	
+	        try {
+	        	EventReponseDto newEvent = eventService.creerEvent(dto);
+	            return Response.status(Response.Status.CREATED)
+	                           .entity(newEvent)
+	                           .build();
+	        }catch (Exception e) {
+	            return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(e.getMessage())
+                        .build();
+	        }
+    }
+    
+
+    //afficher un event
+	@GET
+	@Path("/{eventId}")
+    @Operation(
+            summary = "Récupérer un evenement",
+            description = "Retourne les infos sur un evenement"
+        )
+        @ApiResponses({
+            @ApiResponse(
+                responseCode = "200",
+                description = "evenement trouve avec succes",
+                content = @Content(schema = @Schema(implementation = EventReponseDto.class))
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "evenement introuvable "
+            )
+        })
+	public Response findUserById(
+            @Parameter(description = "ID de l'evenement", required = true)
+	        @PathParam("eventId") Long eventId) {
+
+
+        try {
+    	    return Response.ok(eventService.findEventById(eventId)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+	}
+	
+	
+    //Événements par manager
+    @GET
+    @Path("/all/{managerId}")
+    @Operation(summary = "Événements par manager")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "Liste des événements du manager",
+		        content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+    	@ApiResponse(responseCode = "404", description = "Manager introuvable")
+    })
+    public Response findEventsByManagerId(
+            @Parameter(description = "ID du manager", required = true)
+            @PathParam("managerId") Long manager_Id) {
+    	
+	        try {
+	        	return Response.ok(eventService.findEventsByManagerId(manager_Id)).build();
+	            
+	        } catch (Exception e) {
+	            return Response.status(Response.Status.NOT_FOUND)
+	                           .entity(e.getMessage())
+	                           .build();
+	        }
+        
+    }
+
+    //Événements par date
+    @GET
+    @Path("all/available")
+    @Operation(summary = "Événements disponibles")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Liste des événements disponibles",
+                    content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "Données invalides")
+    })
+    public Response findEventsByDate() {
+        try {
+
+            return Response.ok(eventService.findAvailableEvents()).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+    
+    //valider ou non un evenement
+    @PATCH
+	@Consumes("application/json")
+    @Path("/{eventId}/statut")
+    @Operation(summary = "modifier statut de l'event")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "Statut bien modifié",
+		        content = @Content(schema = @Schema(implementation = EventReponseDto.class))),
+    	@ApiResponse(responseCode = "400", description = "Événement introuvable ou déjà été traité")
+    })
+    public Response updateStatut(
+		@Parameter(description = "ID de l'event", required = true)
+        @PathParam("eventId") Long eventId, 
+		@Parameter(description = "ID de l'admin", required = true)
+        @QueryParam("adminId") Long adminId,
+        @QueryParam("statut") StatutEvent statut){
+        try {
+
+            return Response.ok(eventService.updateStatut(eventId, adminId, statut)).build();
+            
+        } catch (Exception e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+    
+    //supprimer un evenement
+    @DELETE
+    @Path("/delete/{eventId}")
+	@Consumes("application/json")
+    @Operation(summary = "supprimer un event")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "evenement bien supprimé"),
+    	@ApiResponse(responseCode = "400", description = "Événement introuvable ou déjà été supprimé")
+    })
+    public Response deleteEvent(
+
+    	@Parameter(description = "ID de l'event", required = true)
+        @PathParam("eventId") Long eventId,
+
+		@Parameter(description = "ID du manager", required = true)
+        @QueryParam("managerId") Long managerId) {
+
+        try {
+        	
+            eventService.deleteEvent(eventId, managerId);
+	        return Response.ok("evenement bien supprimé").build();   
+	        
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                           .entity(e.getMessage())
+                           .build();
+        }
+    }
+
+    @GET
+    @Path("/all")
+    @Operation(summary = "Lister tous les événements")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Liste des événements")
+    })
+    public Response getAllEvents() {
+        return Response.ok(eventService.getAllEvents()).build();
+    }
 
 }

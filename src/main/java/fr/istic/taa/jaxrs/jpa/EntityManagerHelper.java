@@ -9,10 +9,20 @@ public class EntityManagerHelper {
     private static final EntityManagerFactory emf; 
     private static final ThreadLocal<EntityManager> threadLocal;
 
+    
     static {
-        emf = Persistence.createEntityManagerFactory("dev");      
+        EntityManagerFactory tempEmf = null;
+        try {
+            tempEmf = Persistence.createEntityManagerFactory("mysql");
+        } catch (Exception e) {
+            e.printStackTrace(); // <- c'est tout ce qu'on ajoute
+            throw new RuntimeException("EMF init failed", e);
+        }
+        emf = tempEmf;
         threadLocal = new ThreadLocal<EntityManager>();
     }
+    
+    
 
     public static EntityManager getEntityManager() {
         EntityManager em = threadLocal.get();

@@ -3,6 +3,7 @@ package fr.istic.taa.jaxrs.dao.generic;
 import java.io.Serializable;
 import java.util.List;
 
+import fr.istic.taa.jaxrs.jpa.EntityManagerHelper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 

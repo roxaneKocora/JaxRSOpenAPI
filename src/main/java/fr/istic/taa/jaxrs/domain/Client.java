@@ -2,33 +2,43 @@ package fr.istic.taa.jaxrs.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
 public class Client extends User implements Serializable{
 
-    private String statutClient;
-
-    // L'annotation doit être ICI, sur le champ, pas sur le getter
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+	private boolean client_newsletter;
+	
+	@OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
+	@JsonManagedReference
     private List<Ticket> tickets; 
-    
-    public Client() {}
 
-    // Méthodes métier...
-    public void acheterTicket() {}
-    public void annulerTicket() {}
-    public void demanderRemboursement() {}
-    public void modifierTicket() {}
-    public void telechargerTicket() {}
-    public void rechercherConcert(String critere) {}
+	
+	
+	//GETTERS - SETTERS
 
-    // Getters et Setters standards (sans annotations JPA ici)
+	public boolean isClient_newsletter() {
+		return client_newsletter;
+	}
+	public void setClient_newsletter(boolean client_newsletter) {
+		this.client_newsletter = client_newsletter;
+	}
+	
+	
     public List<Ticket> getTickets() {
         return tickets;
     }
-
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
+    
+    //ToString Client
+	@Override
+	public String toString() {
+		return "Client [tickets=" + tickets + ", userId=" + userId + ", nom=" + nom + ", prenom=" + prenom + ", email="
+				+ email + ", telephone=" + telephone + ", date_naissance=" + date_naissance + ", password=" + password
+				+ ", statut_User=" + statut_user + "]";
+	}
+	
 }
