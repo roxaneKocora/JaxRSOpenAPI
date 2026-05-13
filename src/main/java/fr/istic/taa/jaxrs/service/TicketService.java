@@ -86,10 +86,10 @@ public class TicketService {
     // Liste des Tickets pour un client 
     public List<Ticket> findTicketsByClientId(Long clientId) {
     	
-        if (this.eventDao.findOne(clientId) == null) {
+        if (this.clientDao.findOne(clientId) == null) {
             throw new EntityNotFoundException("Client Introuvable");
         }
-        return ticketDao.findByEventId(clientId);
+        return ticketDao.findByClientId(clientId);
     }
     
     

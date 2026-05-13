@@ -46,6 +46,19 @@ public class TicketDao extends AbstractJpaDao<TicketId, Ticket> {
         						.setParameter("event_id", eventId);
         
         return query.getSingleResult();
-    }  
+    }
+
+    public List<Ticket> findByClientId(Long clientId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Ticket> cq = cb.createQuery(Ticket.class);
+
+        Root<Ticket> ticket = cq.from(Ticket.class);
+
+        Predicate clientCondition = cb.equal(ticket.get("client").get("userId"), clientId);
+
+        cq.where(clientCondition);
+
+        return entityManager.createQuery(cq).getResultList();
+    }
     
 }

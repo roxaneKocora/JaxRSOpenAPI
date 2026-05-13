@@ -7,6 +7,7 @@ import fr.istic.taa.jaxrs.dao.AdminDao;
 import fr.istic.taa.jaxrs.dao.EventDao;
 import fr.istic.taa.jaxrs.dao.ManagerDao;
 import fr.istic.taa.jaxrs.domain.Event;
+import fr.istic.taa.jaxrs.domain.enumeration.StatutEvent;
 import fr.istic.taa.jaxrs.dto.*;
 import fr.istic.taa.jaxrs.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -160,15 +161,11 @@ public class EventResource {
 		@Parameter(description = "ID de l'event", required = true)
         @PathParam("eventId") Long eventId, 
 		@Parameter(description = "ID de l'admin", required = true)
-        @QueryParam("adminId") Long adminId, 
-	    @RequestBody(
-	            description = "Example valeurs du champ : ANNULE, VALIDE",
-	            required = true,
-                content = @Content(schema = @Schema(implementation = StatutDto.class))
-        )StatutDto statutDto) {
+        @QueryParam("adminId") Long adminId,
+        @QueryParam("statut") StatutEvent statut){
         try {
 
-            return Response.ok(eventService.updateStatut(eventId, adminId, statutDTO.getStatut_concert())).build();
+            return Response.ok(eventService.updateStatut(eventId, adminId, statut)).build();
             
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND)

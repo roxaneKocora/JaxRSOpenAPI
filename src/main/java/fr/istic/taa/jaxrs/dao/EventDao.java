@@ -32,7 +32,6 @@ public class EventDao extends AbstractJpaDao<Long, Event> {
             
     }
 
-
 	public List<Event> findAll() {
 		return entityManager
 				.createQuery("SELECT e FROM Event e WHERE e.is_deleted = false", Event.class)
